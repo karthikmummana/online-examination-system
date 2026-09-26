@@ -1,0 +1,23 @@
+{
+  "name": "online-examination-system",
+  "version": "1.0.0",
+  "description": "Full-Stack MERN Online Examination & Assessment System",
+  "scripts": {
+    "start": "node backend/server.js",
+    "seed": "npm --prefix backend run seed",
+    "seed:admin": "npm --prefix backend run seed:admin",
+    "backend": "npm --prefix backend start",
+    "frontend": "npm --prefix frontend run dev"
+  },
+  "keywords": [
+    "mern",
+    "online-examination",
+    "assessment",
+    "quiz",
+    "react",
+    "express",
+    "mongodb"
+  ],
+  "author": "EvaluaTech",
+  "license": "MIT"
+}
