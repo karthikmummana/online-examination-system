@@ -60,16 +60,19 @@ const startServer = async () => {
     // Database Connection
     await connectDB();
 
-    // Auto-seed development database if empty
-    const userCount = await User.countDocuments();
-    if (userCount === 0) {
-      console.log('[Server] Database is empty. Running initial development seed...');
-      await seedData(false);
-    }
-
     const server = app.listen(PORT, () => {
       console.log(`[Server] Online Examination Backend running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
     });
+
+    // Non-blocking auto-seed in background if database is empty
+    User.countDocuments().then((userCount) => {
+      if (userCount === 0) {
+        console.log('[Server] Database is empty. Running initial development seed in background...');
+        seedData(false).catch((seedErr) => {
+          console.error('[Server] Background seed failed:', seedErr.message);
+        });
+      }
+    }).catch((err) => console.warn('[Server] Count check failed:', err.message));
 
     return server;
   } catch (err) {

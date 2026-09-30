@@ -109,7 +109,10 @@ const googleAuth = async (req, res) => {
       return res.status(400).json({ message: 'Google credential token is required' });
     }
 
-    const targetClientId = process.env.GOOGLE_CLIENT_ID || DEFAULT_GOOGLE_CLIENT_ID;
+    const envClientId = process.env.GOOGLE_CLIENT_ID;
+    const targetClientId = (envClientId && !envClientId.startsWith('your_')) 
+      ? envClientId 
+      : DEFAULT_GOOGLE_CLIENT_ID;
     const googleClient = new OAuth2Client(targetClientId);
 
     // Verify Google ID token securely using google-auth-library
