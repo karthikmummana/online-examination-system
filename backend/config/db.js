@@ -1,11 +1,13 @@
+
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
   const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 
   if (!mongoUri) {
-    console.error('[Database] MongoDB connection URI is not configured in environment variables.');
-    process.exit(1);
+    throw new Error(
+      '[Database] MongoDB connection URI is not configured in environment variables.'
+    );
   }
 
   try {
@@ -13,12 +15,18 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 10000,
     });
 
+    console.log('[Database] MongoDB connected successfully');
     console.log(
-      `[Database] Connected to MongoDB at ${mongoose.connection.host}`
+      `[Database] Connected to: ${mongoose.connection.name}`
     );
+
   } catch (err) {
-    console.error('[Database] MongoDB connection failed:', err.message);
-    process.exit(1);
+    console.error(
+      '[Database] MongoDB connection failed:',
+      err.message
+    );
+
+    throw err;
   }
 };
 
@@ -27,7 +35,10 @@ const disconnectDB = async () => {
     await mongoose.disconnect();
     console.log('[Database] MongoDB disconnected.');
   } catch (err) {
-    console.error('[Database] Error disconnecting DB:', err.message);
+    console.error(
+      '[Database] Error disconnecting DB:',
+      err.message
+    );
   }
 };
 
